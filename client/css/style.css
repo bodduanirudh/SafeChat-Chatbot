@@ -1,0 +1,37 @@
+@import "./global.css";
+@import "./hljs.css";
+@import "./main.css";
+@import "./sidebar.css";
+@import "./conversation.css";
+@import "./message.css";
+@import "./stop-generating.css";
+@import "./typing.css";
+@import "./checkbox.css";
+@import "./label.css";
+@import "./button.css";
+@import "./buttons.css";
+@import "./dropdown.css";
+@import "./field.css";
+@import "./select.css";
+@import "./options.css";
+@import "./settings.css";
+@import "./message-input.css";
+
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<meta name="full-screen" content="yes" />
+		<meta name="description" content="A conversational AI system that listens, learns, and challenges" />
+		<meta property="og:title" content="ChatGPT" />
+		<meta property="og:image" content="https://openai.com/content/images/2022/11/ChatGPT.jpg" />
+		<meta
+			property="og:description"
+			content="A conversational AI system that listens, learns, and challenges" />
+		<meta property="og:url" content="https://chat.acy.dev" />
+		<link rel="stylesheet" href="{{ url_for('bp.static', filename='css/style.css') }}" />
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="{{ url_for('bp.static', filename='img/apple-touch-icon.png') }}" />
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="{{ url_for('bp.static', filename='img/favicon-32x32.png') }}" />
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="{{ url_for('bp.static', filename='img/favicon-16x16.png') }}" />
+		<link rel="manifest" href="{{ url_for('bp.static', filename='img/site.webmanifest') }}" />
+		<link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+		<title>FreeGPT</title>
+		</head>
+
+	<body data-urlprefix="{{ url_prefix}}">
+		<div class="main-container">
+			<div class="box sidebar">
+				<button class="button" id="sidebar-button" onclick="new_conversation()">
+					<i class="fa-regular fa-plus"></i>
+					<span>{{_('New Conversation')}}</span>
+				</button>
+				<div class="top">					
+					<div class="spinner"></div>
+				</div>
+
+
+
+
+				
+			
+				
+
+				
+
+
+
+
+
+				<div class="sidebar-footer">
+					<!-- Add to your existing sidebar section -->
+					<!-- <button class="button" onclick="delete_conversations()">
+						<i class="fa-regular fa-trash"></i>
+						<span>{{_('Clear Conversations')}}</span>
+					</button> -->
+					    <!-- Security Key Entry Form -->
+						<div class="security-key-form" style="padding: 10px;">
+							<input type="password" id="securityKeyInput" placeholder="Enter Security Key" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 2px solid #ccc; border-radius: 4px;">
+							<button onclick="verifyKey()" style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Submit</button>
+						</div>
+						
+						<!-- Sensitive Key Management (Initially Hidden) -->
+						<div id="sensitiveKeyContainer" style="display:none; padding: 10px;">
+							<input type="text" id="sensitiveKeyInput" placeholder="Add Sensitive Key" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 2px solid #ccc; border-radius: 4px;">
+							<button onclick="addSensitiveKey()" style="width: 100%; padding: 10px; background-color: #008CBA; color: white; border: none; border-radius: 4px; cursor: pointer;">Add Key</button>
+							<button onclick="removeSensitiveKey()" style="width: 100%; padding: 10px; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">Remove Key</button>
+						</div>
+						
+						
+
+						<div class="settings-container">
+
+								<div class="field">
+									<span>{{_('Model')}}</span>
+									<select class="dropdown" name="model" id="model" disabled>
+										<option value="gpt-3.5-turbo" selected="">GPT-3.5-turbo</option>
+										<option value="gpt-4">GPT-4</option>
+										<option value="llama2-70b">LLaMA2-70b</option>
+										<option value="gemini-pro">Gemini-pro</option>
+									</select>
+									
+								</div>
+								
+								
+								<div class="field" style="display: none;">
+									<span>{{_('Provider')}}</span>
+									<select class="dropdown" name="provider" id="provider">
+										<option value="g4f.Provider.Auto" selected>Auto</option>
+										<option value="g4f.Provider.ChatgptLogin">ChatGPT Login</option>
+										<option value="g4f.Provider.Bing">Bing</option>
+										<option value="g4f.Provider.Llama2">Llama2</option>
+										<option value="g4f.Provider.Liaobots">Liaobots</option>
+										<option value="g4f.Provider.Phind">Phind</option>
+										<option value="g4f.Provider.You">You</option>
+									</select>
+								</div>
+								
+								<div class="field" style="display: none;">
+									<span>{{_('Jailbreak')}}</span>
+									<select class="dropdown" name="jailbreak" id="jailbreak">
+										<option value="default" selected>{{_('Default')}}</option>
+										<option value="gpt-dan-11.0">{{_('DAN')}}</option>
+										<option value="gpt-evil">{{_('Evil')}}</option>
+									</select>
+								</div>
+								
+								<div class="field">
+									<span>{{_('Language')}}</span>
+									<select
+									class="dropdown"
+									id="language"
+									onchange="changeLanguage(this.value)"></select>
+								</div>
+								
+								<div class="field checkbox" style="display: none;">
+									<span>{{_('Web Access')}}</span>
+									<input type="checkbox" id="switch" checked />
+									<label for="switch"></label>
+								</div>
+								
+								<div class="field checkbox">
+									<span>{{_('Dark Mode')}}</span>
+									<input type="checkbox" id="theme-toggler" />
+									<label for="theme-toggler"></label>
+								</div>
+								<div class="field checkbox fullscreen">
+									<span>{{_('Fullscreen Mode')}}</span>
+									<input type="checkbox" id="fullscreen-toggle" />
+									<label for="fullscreen-toggle"></label>
+								</div>
+								
+								<!-- <div class="field checkbox">
+									<span>{{_('Highlight')}}</span>
+									<input type="checkbox" id="hl-toggle" />
+									<label for="hl-toggle"></label>
+								</div> -->			
+					</div>
+					
+				</div>
+			</div>
+			<div class="conversation">
+				<div class="stop-generating stop-generating-hidden">
+					<button class="button" id="cancelButton">
+						<span>{{_('Stop Generating')}}</span>
+					</button>
+				</div>
+				<div class="box" id="messages"></div>
+				<div class="user-input">
+					<div class="box input-box">
+						<textarea
+							id="message-input"
+							placeholder="{{_('Ask a question')}}"
+							cols="30"
+							rows="10"
+							style="white-space: pre-wrap"></textarea>
+						<div id="send-button">
+							<i class="fa-regular fa-paper-plane-top"></i>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<div class="menu-button">
+			<i class="fa-solid fa-bars"></i>
+		</div>
+				   
+		<!-- scripts -->
+			<script>
+function verifyKey() {
+    var key = document.getElementById('securityKeyInput').value;
+    if (key === '123') {
+        document.getElementById('sensitiveKeyContainer').style.display = 'block';
+        alert('Security key verified! You can now add sensitive keys.');
+    } else {
+        alert('Incorrect security key. Try again!');
+        document.getElementById('sensitiveKeyContainer').style.display = 'none';
+    }
+}
+			
+function addSensitiveKey() {
+    var key = document.getElementById('sensitiveKeyInput').value;
+    fetch('/backend-api/v2/add-sensitive-word', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({word: key})
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Response: ' + data.message);
+        document.getElementById('sensitiveKeyInput').value = ''; // Clear input field
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+			function removeSensitiveKey() {
+    var key = document.getElementById('sensitiveKeyInput').value;
+    if (key) {
+        // Implement logic to remove the key here
+        console.log("Sensitive Key Removed: " + key);
+        alert("Sensitive Key Removed: " + key);
+        document.getElementById('sensitiveKeyInput').value = ''; // Clear input after removal
+    } else {
+        alert('No key specified for removal.');
+    }
+}
+function removeSensitiveKey() {
+    var key = document.getElementById('sensitiveKeyInput').value;
+    fetch('/backend-api/v2/remove-sensitive-word', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({word: key})
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Response: ' + data.message);
+        document.getElementById('sensitiveKeyInput').value = ''; // Clear input field
+    })
+    .catch(error => console.error('Error:', error));
+}	
+		
+
+
+
+
+		</script>
+			
+			
+			
+		
+		<script>window.conversation_id = "{{ chat_id }}";</script>
+		<script src="{{ url_for('bp.static', filename='js/icons.js') }}"></script>
+		<script src="{{ url_for('bp.static', filename='js/chat.js') }}" defer></script>
+		<script src="{{ url_for('bp.static', filename='js/markdown-it.min.js') }}"></script>
+		<script src="{{ url_for('bp.static', filename='js/highlight.min.js') }}"></script>
+		<script src="{{ url_for('bp.static', filename='js/highlightjs-copy.min.js') }}"></script>
+		<script src="{{ url_for('bp.static', filename='js/theme-toggler.js') }}"></script>
+		<script src="{{ url_for('bp.static', filename='js/sidebar-toggler.js') }}"></script>
+		<script src="{{ url_for('bp.static', filename='js/change-language.js') }}"></script>
+		<script src="{{ url_for('bp.static', filename='js/fullscreen-toggle.js') }}"></script>
+	</body>
+</html>
